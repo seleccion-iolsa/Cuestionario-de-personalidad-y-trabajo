@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuestionario de personalidad y trabajo</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--tx:#1f2328;--mu:#5d6570;--ac:#2f6f5e;--acs:#e3f0ec;--bd:#dcdad3;--bar:#e8e6df;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17191c;--card:#202328;--tx:#eceae4;--mu:#a2a8b0;--ac:#6fc2aa;--acs:#25352f;--bd:#363b42;--bar:#2d3238;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17191c;--card:#202328;--tx:#eceae4;--mu:#a2a8b0;--ac:#6fc2aa;--acs:#25352f;--bd:#363b42;--bar:#2d3238;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:22px}
+h1{font-size:1.5rem;line-height:1.25;margin:0 0 8px}
+h2{font-size:1.15rem;line-height:1.4;margin:0 0 16px}
+p{margin:0 0 12px}.mu{color:var(--mu);font-size:.9rem}
+label{display:block;font-weight:600;margin:14px 0 4px}
+input[type=text],input[type=password],input[type=date]{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:inherit}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:11px 16px}
+button.p{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#10201a}}
+button:disabled{opacity:.45;cursor:not-allowed}
+.opt{display:block;width:100%;text-align:left;margin:0 0 10px;padding:13px 14px;line-height:1.4}
+.opt.sel{background:var(--acs);border-color:var(--ac)}
+.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px}
+.likert button{padding:14px 0;font-weight:600}.likert button.sel{background:var(--acs);border-color:var(--ac)}
+.lg{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mu);margin-bottom:6px}
+.prog{height:6px;background:var(--bar);border-radius:6px;margin-bottom:6px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--ac);transition:width .25s}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;color:var(--ac);background:var(--acs);padding:2px 10px;border-radius:20px;margin-bottom:10px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.row{margin:0 0 16px}.rh{display:flex;justify-content:space-between;gap:8px;font-weight:600;margin-bottom:5px}
+.rb{height:12px;background:var(--bar);border-radius:8px;overflow:hidden}.rb i{display:block;height:100%;background:var(--ac)}
+textarea{width:100%;min-height:150px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font:.85rem/1.5 ui-monospace,Menlo,monospace}
+.sc{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.85rem}th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}.note{border-left:3px solid var(--ac);padding:8px 12px;background:var(--acs);border-radius:0 8px 8px 0;font-size:.88rem;margin-top:16px}
+</style>
+</head>
+<body>
+<main><div id="app"></div></main>
+<script>
+var DIMS={e:"Extraversión",a:"Amabilidad",c:"Responsabilidad",es:"Estabilidad emocional",o:"Apertura",sin:"Sinceridad",fai:"Imparcialidad",com:"Compañerismo",pru:"Prudencia",dil:"Diligencia"};
+var LB={e:"Sociable y comunicativo",a:"Cooperador y empático",c:"Metódico y responsable",es:"Calmado y estable",o:"Curioso y creativo"};
+var T=[
+["e",0,"Soy el alma de la fiesta."],["e",1,"No hablo mucho."],["e",0,"Hablo con muchas personas distintas en las reuniones sociales."],["e",1,"Prefiero mantenerme en segundo plano."],
+["a",0,"Simpatizo con los sentimientos de los demás."],["a",1,"No me interesan los problemas de otras personas."],["a",0,"Percibo las emociones de los demás."],["a",1,"Realmente no me intereso por los demás."],
+["c",0,"Termino mis quehaceres de inmediato."],["c",1,"A menudo olvido poner las cosas en su lugar."],["c",0,"Me gusta el orden."],["c",1,"Suelo hacer un desorden con las cosas."],
+["es",1,"Tengo cambios de humor frecuentes."],["es",0,"Me siento relajado/a la mayor parte del tiempo."],["es",1,"Me altero con facilidad."],["es",0,"Rara vez me siento triste o decaído/a."],
+["o",0,"Tengo una imaginación vívida."],["o",1,"No me interesan las ideas abstractas."],["o",1,"Me cuesta entender ideas abstractas."],["o",1,"No tengo buena imaginación."],
+["sin",0,"No aparento ser más de lo que soy."],["sin",1,"Uso la adulación para salir adelante."],["sin",1,"Digo a los demás lo que quieren oír para que hagan lo que yo quiero."],["sin",1,"Finjo preocuparme por los demás."],["sin",1,"Actúo como un personaje para impresionar a la gente."],
+["fai",0,"Nunca tomaría cosas que no son mías."],["fai",0,"Devuelvo el cambio de más cuando un cajero se equivoca."],["fai",0,"Trato de cumplir las reglas."],["fai",1,"Hago trampa para salir adelante."],["fai",1,"Engaño a personas que han confiado en mí."],["fai",1,"Me admira una estafa realmente ingeniosa."],
+["com",0,"Acepto a las personas tal como son."],["com",0,"Tengo una buena palabra para todos."],["com",1,"Hablo mal de los demás."],["com",1,"Critico los defectos de los demás."],["com",0,"Soy bueno/a para aceptar consejos."],["com",1,"Reacciono con fuerza ante las críticas."],
+["pru",0,"Evito cometer errores."],["pru",0,"Hago planes y me atengo a ellos."],["pru",0,"Hago las cosas según un plan."],["pru",1,"Me lanzo a hacer cosas sin pensar."],["pru",1,"Hago cosas sin pensar en las consecuencias."],["pru",1,"Tomo decisiones precipitadas."],
+["dil",0,"Trabajo duro."],["dil",0,"Termino con éxito mis tareas."],["dil",1,"Hago lo mínimo para salir del paso."],["dil",1,"Me detengo cuando el trabajo se vuelve difícil."]
+];
+function sh(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var Q=sh(T.map(function(t){return{d:t[0],r:t[1],t:t[2]}}));
+var A=[],i=-1,info={n:"",p:""},app=document.getElementById("app"),ADMIN_PIN="1278",KEY="evalResultadosV2",ks=Object.keys(DIMS);
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+function hoy(){var t=new Date(),z=function(x){return(x<10?"0":"")+x};return t.getFullYear()+"-"+z(t.getMonth()+1)+"-"+z(t.getDate())}
+function fm(v){return(Math.round(v*10)/10).toFixed(1)}
+function lv(m){return m>=3.5?"Alto":m>=2.5?"Medio":"Bajo"}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return[]}}
+function save(a){try{localStorage.setItem(KEY,JSON.stringify(a));return true}catch(e){return false}}
+function intro(){
+app.innerHTML='<div class="card"><h1>Cuestionario de personalidad y trabajo</h1>'+
+'<p>Son '+Q.length+' frases y toma unos 10 minutos. Indica qué tan bien te describe cada una, pensando en cómo eres normalmente. No hay respuestas buenas ni malas: lo más útil es responder con sinceridad. Tus respuestas quedarán registradas para la persona que aplica la evaluación.</p>'+
+'<label for="n">Nombre completo</label><input type="text" id="n" autocomplete="name">'+
+'<label for="p">Puesto o área</label><input type="text" id="p">'+
+'<label for="d">Número de documento de identidad</label><input type="text" id="d" autocomplete="off">'+
+'<label for="f">Fecha</label><input type="date" id="f" value="'+hoy()+'">'+
+'<p class="mu" id="er" style="color:#b3261e;margin:10px 0 0"></p>'+
+'<div class="nav" style="justify-content:flex-end"><button class="p" id="go">Comenzar</button></div></div><p style="text-align:center;margin:18px 0 0"><button id="ad" class="mu" style="border:none;background:none;text-decoration:underline">Panel del evaluador</button></p>';
+document.getElementById("ad").onclick=function(){adminLogin()};
+document.getElementById("go").onclick=function(){var n=document.getElementById("n").value.trim(),p=document.getElementById("p").value.trim(),d=document.getElementById("d").value.trim(),f=document.getElementById("f").value;
+if(!n||!p||!d||!f){document.getElementById("er").textContent="Completa todos los campos para comenzar.";return}
+info={n:n,p:p,d:d,f:f.split("-").reverse().join("/")};i=0;draw()}}
+function draw(){
+var q=Q[i],h='<div class="prog"><i style="width:'+(i/Q.length*100)+'%"></i></div><p class="mu">Frase '+(i+1)+' de '+Q.length+'</p><div class="card"><span class="tag">¿Qué tan bien te describe?</span><h2>'+esc(q.t)+'</h2><div class="lg"><span>Muy inexacto</span><span>Muy exacto</span></div><div class="likert">';
+for(var v=1;v<=5;v++)h+='<button data-v="'+v+'" class="'+(A[i]===v?"sel":"")+'">'+v+'</button>';
+h+='</div><div class="nav"><button id="bk"'+(i===0?" disabled":"")+'>Atrás</button><button class="p" id="nx"'+(A[i]===undefined?" disabled":"")+'>'+(i===Q.length-1?"Terminar":"Siguiente")+'</button></div></div>';
+app.innerHTML=h;
+app.querySelectorAll("[data-v]").forEach(function(b){b.onclick=function(){A[i]=+b.dataset.v;draw()}});
+document.getElementById("bk").onclick=function(){i--;draw()};
+document.getElementById("nx").onclick=function(){if(i===Q.length-1)result();else{i++;draw()}}}
+function scores(){var s={},c={};Q.forEach(function(q,x){var v=q.r?6-A[x]:A[x];s[q.d]=(s[q.d]||0)+v;c[q.d]=(c[q.d]||0)+1});var o={};ks.forEach(function(d){o[d]=Math.round(s[d]/c[d]*100)/100});return o}
+function uniform(){var c=[0,0,0,0,0,0];A.forEach(function(v){c[v]++});return Math.max.apply(null,c)/Q.length>=0.7}
+function hon(s){return(s.sin+s.fai)/2}
+function lec(r){var s=r.sc,m=[],b=null;
+if(hon(s)<3.5)m.push("Honestidad por debajo de lo habitual: contrastar en entrevista y con referencias.");
+if(s.com<3)m.push("Compañerismo bajo: explorar cómo maneja críticas y conflictos.");
+if(s.c<3||s.pru<3)m.push("Orden o prudencia bajos: pedir ejemplos concretos.");
+if(s.es<2.5)m.push("Estabilidad emocional baja: considerar si el puesto implica mucha presión.");
+if(r.u)m.push("Respuestas muy uniformes: resultado poco fiable, conviene repetir.");
+["e","a","c","es","o"].forEach(function(k){if(b===null||s[k]>s[b])b=k});
+return"Perfil: "+LB[b]+". "+(m.length?m.join(" "):"Sin alertas.")}
+function result(){
+var sc=scores(),all=load();all.push({f:info.f,n:info.n,p:info.p,d:info.d,sc:sc,u:uniform()?1:0});
+var ok=save(all),h='<div class="card"><h1>¡Gracias por completar el cuestionario!</h1><p>Tus respuestas quedaron registradas.</p>';
+if(!ok){var t="Fecha: "+info.f+"\nNombre: "+info.n+"\nDocumento: "+info.d+"\nPuesto: "+info.p+"\n";ks.forEach(function(d){t+=DIMS[d]+": "+fm(sc[d])+"\n"});
+h+='<div class="note">No se pudo guardar en este navegador (¿modo privado?). Avisa a quien aplica la evaluación y entrégale este resumen.</div><textarea readonly>'+esc(t)+'</textarea>'}
+h+='<div class="nav" style="justify-content:flex-end"><button class="p" id="rs">Siguiente persona</button></div></div>';
+app.innerHTML=h;
+document.getElementById("rs").onclick=function(){A=[];i=-1;info={n:"",p:""};Q=sh(Q);intro()}}
+function adminLogin(msg){
+app.innerHTML='<div class="card"><h2>Panel del evaluador</h2><label for="pw">PIN</label><input type="password" id="pw" inputmode="numeric" autocomplete="off">'+(msg?'<p class="mu" style="margin-top:8px">'+msg+'</p>':'')+'<div class="nav"><button id="bk">Volver</button><button class="p" id="en">Entrar</button></div></div>';
+document.getElementById("bk").onclick=intro;
+document.getElementById("en").onclick=function(){if(document.getElementById("pw").value===ADMIN_PIN)adminView();else adminLogin("PIN incorrecto.")}}
+function adminView(){
+var all=load(),h='<div class="card"><h2>Resultados guardados ('+all.length+')</h2>';
+if(!all.length)h+='<p class="mu">Todavía no hay evaluaciones.</p>';
+else{h+='<div class="sc"><table><tr><th>Fecha</th><th>Nombre</th><th>Documento</th><th>Puesto</th>'+ks.map(function(d){return"<th>"+DIMS[d]+"</th>"}).join("")+'<th>Honestidad</th><th>Lectura</th></tr>';
+all.forEach(function(r){h+='<tr><td>'+esc(r.f)+'</td><td>'+esc(r.n||"-")+'</td><td>'+esc(r.d||"-")+'</td><td>'+esc(r.p||"-")+'</td>'+ks.map(function(d){return"<td>"+fm(r.sc[d])+" · "+lv(r.sc[d])+"</td>"}).join("")+'<td>'+fm(hon(r.sc))+" · "+lv(hon(r.sc))+'</td><td style="white-space:normal;min-width:280px">'+esc(lec(r))+'</td></tr>'});
+h+='</table></div><div class="note"><b>Cómo leerlo.</b> Cada escala es el promedio de sus frases en una escala de 1 a 5 (más alto = más de ese rasgo). Alto ≥ 3,5; Medio 2,5 a 3,4; Bajo &lt; 2,5. Son rangos orientativos: no hay baremos locales. Los rasgos de personalidad (extraversión, apertura, etc.) no son mejores ni peores, dependen del puesto. «Honestidad» promedia sinceridad e imparcialidad. Es un autoinforme: puede responderse para «quedar bien», así que úsalo para orientar la entrevista y la verificación de referencias, no como único criterio.</div><div class="note">Fuentes: Mini-IPIP (Donnellan et al., 2006) para extraversión, amabilidad, responsabilidad, estabilidad emocional y apertura; IPIP-HEXACO (Ashton, Lee y Goldberg, 2007) para sinceridad, imparcialidad, compañerismo (amabilidad), prudencia y diligencia. Ambas son de dominio público (ipip.ori.org). La traducción al español es una adaptación no baremada. No mide capacidad de resolución de problemas.</div>'}
+h+='<div class="nav"><button id="bk">Salir</button><button id="dl"'+(all.length?"":" disabled")+'>Descargar CSV</button><button id="dx"'+(all.length?"":" disabled")+'>Borrar todo</button></div></div>';
+app.innerHTML=h;
+document.getElementById("bk").onclick=intro;
+document.getElementById("dl").onclick=function(){
+function q(v){return'"'+String(v).replace(/"/g,'""')+'"'}
+var c=[["Fecha","Nombre","Documento","Puesto"].concat(ks.map(function(d){return DIMS[d]}),["Honestidad","Lectura"])].concat(all.map(function(r){return[r.f,r.n,r.d||"",r.p].concat(ks.map(function(d){return r.sc[d]}),[hon(r.sc).toFixed(2),lec(r)])}));
+var blob=new Blob(["\ufeff"+c.map(function(r){return r.map(q).join(",")}).join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");
+a.href=URL.createObjectURL(blob);a.download="resultados-evaluacion.csv";document.body.appendChild(a);a.click();a.remove()};
+var dx=document.getElementById("dx"),armed=false;
+dx.onclick=function(){if(!armed){armed=true;dx.textContent="Confirmar: borrar todo";dx.className="p"}else{save([]);adminView()}}}
+intro();
+</script>
+</body>
+</html>
